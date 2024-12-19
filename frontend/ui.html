@@ -7,40 +7,40 @@
 
     <style>
         .image-container {
-            display: flex; /* Use flexbox for horizontal alignment */
-            justify-content: center; /* Center the images */
-            gap: 20px; /* Add space between images */
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
         .image-container img {
-            width: 300px; /* Adjust the width */
-            height: auto; /* Maintain aspect ratio */
-            border: 1px solid #ccc; /* Optional: Add a border */
-            padding: 5px; /* Optional: Add padding inside the border */
+            width: 300px;
+            height: auto;
+            border: 1px solid #ccc;
+            padding: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Upload and Display Image</h1>
+    <h1>Object detection model</h1>
     <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" id="imageInput" name="file" accept="image/*" required>
         <button type="submit">Upload</button>
     </form>
 
     <div class="image-container">
-        <!-- Uploaded Image -->
         <div>
             <img id="uploadedImage" src="" alt="Uploaded Image" style="display: none;">
-            <h3 style="text-align: center; font: bold;">Uploaded Image</h3>
+            <h3 id="uploadedImageText" style="text-align: center; font: bold;"></h3>
         </div>
-        <!-- Processed Image -->
+
         <div>
             <img id="processedImage" src="" alt="Processed Image" style="display: none;">
-            <h3 style="text-align: center; font: bold;">Processed Image</h3>
+            <h3 id="processedImageText" style="text-align: center; font: bold;"></h3>
         </div>
     </div>
 
-    <h3>Json Response</h3>
-    <div id="jsonResponse">
+    <div>
+        <h3 id="jsonResponseText"></h3>
+        <div id="jsonResponse"></div>
     </div>
 
     <script>
@@ -48,6 +48,9 @@
         const uploadedImage = document.getElementById('uploadedImage');
         const processedImage = document.getElementById('processedImage');
         const jsonResponse = document.getElementById('jsonResponse');
+        const uploadedImageText = document.getElementById('uploadedImageText');
+        const processedImageText = document.getElementById('processedImageText');
+        const jsonResponseText = document.getElementById('jsonResponseText');
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -62,13 +65,16 @@
                 const result = await response.json();
                 if (response.ok) {
                     // Show the uploaded image
+                    uploadedImageText.textContent = "Uploaded image";
                     uploadedImage.src = `http://127.0.0.1:8000/${result.uploaded_image}`;
                     uploadedImage.style.display = "inline-block";
 
                     // Show the processed image
+                    processedImageText.textContent = "Processed image";
                     processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
                     processedImage.style.display = "inline-block";
 
+                    jsonResponseText.textContent = "JSON Response";
                     jsonResponse.textContent = `${JSON.stringify(JSON.parse(result.json_response), null, 2)}`
                 } else {
                     alert(`Error: ${result.error}`);

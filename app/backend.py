@@ -17,9 +17,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PARENT_DIR = os.path.join("app", "results")
+PARENT_DIR = "results"
 os.makedirs(PARENT_DIR, exist_ok=True)
-app.mount("/app/results", StaticFiles(directory=os.path.join("app", "results")), name="results")
+app.mount(f"/app/{PARENT_DIR}", StaticFiles(directory=f"/app/{PARENT_DIR}"), name=f"{PARENT_DIR}")
 
 @app.post("/upload/")
 async def upload_image(file: UploadFile = File(...)):
@@ -50,8 +50,8 @@ async def upload_image(file: UploadFile = File(...)):
         return JSONResponse(content={
             "dir_name": f"{dir_name}",
             "message": f"File '{file.filename}' processed successfully.",
-            "uploaded_image": f"{upload_path}",
-            "processed_image": f"{processed_path}",
+            "uploaded_image": f"app/{upload_path}",
+            "processed_image": f"app/{processed_path}",
             "json_response": f"{model_response}"
         })
     except Exception as e:
