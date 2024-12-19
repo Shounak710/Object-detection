@@ -1,16 +1,15 @@
-from fastapi import FastAPI, File, UploadFile
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse, FileResponse
-from fastapi.middleware.cors import CORSMiddleware
-from PIL import Image, ImageDraw
-import datetime
 import os
 import shutil
-from model.models import predict
+import datetime
+from model.model import predict
+from fastapi.staticfiles import StaticFiles
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, FileResponse
 
 app = FastAPI()
 
-app.mount("/app/results", StaticFiles(directory="app/results"), name="results")
+app.mount("/app/results", StaticFiles(directory=os.path.join("app", "results")), name="results")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,10 +20,6 @@ app.add_middleware(
 
 PARENT_DIR = os.path.join("app", "results")
 os.makedirs(PARENT_DIR, exist_ok=True)
-# UPLOAD_DIR = "uploaded_images"
-# PROCESSED_DIR = "processed_images"
-# os.makedirs(UPLOAD_DIR, exist_ok=True)
-# os.makedirs(PROCESSED_DIR, exist_ok=True)
 
 @app.post("/upload/")
 async def upload_image(file: UploadFile = File(...)):
@@ -37,15 +32,17 @@ async def upload_image(file: UploadFile = File(...)):
         os.makedirs(dir_path, exist_ok=False)
 
         upload_path = os.path.join(dir_path, f"upload{ext}")
-        print('upload path', upload_path)
+        print('upload path:', upload_path)
 
-        with open(upload_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        try:
+            with open(upload_path, "wb") as buffer:
+                shutil.copyfileobj(file.file, buffer)
+        except Exception as e:
+            print(f"Error: {e}")
 
         processed_path = os.path.join(dir_path, f"processed{ext}")
-        model_response = predict(image_path=upload_path, save_path=processed_path)
-
-        print(model_response)
+        json_response_path = os.path.join(dir_path, "response.json")
+        model_response = predict(upload_image_path=upload_path, processed_image_path=processed_path, json_response_path=json_response_path)        
 
         return JSONResponse(content={
             "dir_name": f"{dir_name}",

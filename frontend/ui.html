@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Upload and Display</title>
+
+    <style>
+        .image-container {
+            display: flex; /* Use flexbox for horizontal alignment */
+            justify-content: center; /* Center the images */
+            gap: 20px; /* Add space between images */
+        }
+        .image-container img {
+            width: 300px; /* Adjust the width */
+            height: auto; /* Maintain aspect ratio */
+            border: 1px solid #ccc; /* Optional: Add a border */
+            padding: 5px; /* Optional: Add padding inside the border */
+        }
+    </style>
 </head>
 <body>
     <h1>Upload and Display Image</h1>
@@ -12,16 +26,28 @@
         <button type="submit">Upload</button>
     </form>
 
-    <h2>Uploaded Image:</h2>
-    <img id="uploadedImage" src="" alt="Uploaded Image" style="max-width: 300px; display: none;">
-    
-    <h2>Processed Image:</h2>
-    <img id="processedImage" src="" alt="Processed Image" style="max-width: 300px; display: none;">
+    <div class="image-container">
+        <!-- Uploaded Image -->
+        <div>
+            <img id="uploadedImage" src="" alt="Uploaded Image" style="display: none;">
+            <h3 style="text-align: center; font: bold;">Uploaded Image</h3>
+        </div>
+        <!-- Processed Image -->
+        <div>
+            <img id="processedImage" src="" alt="Processed Image" style="display: none;">
+            <h3 style="text-align: center; font: bold;">Processed Image</h3>
+        </div>
+    </div>
+
+    <h3>Json Response</h3>
+    <div id="jsonResponse">
+    </div>
 
     <script>
         const form = document.getElementById('uploadForm');
         const uploadedImage = document.getElementById('uploadedImage');
         const processedImage = document.getElementById('processedImage');
+        const jsonResponse = document.getElementById('jsonResponse');
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -37,11 +63,13 @@
                 if (response.ok) {
                     // Show the uploaded image
                     uploadedImage.src = `http://127.0.0.1:8000/${result.uploaded_image}`;
-                    uploadedImage.style.display = "block";
+                    uploadedImage.style.display = "inline-block";
 
                     // Show the processed image
                     processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
-                    processedImage.style.display = "block";
+                    processedImage.style.display = "inline-block";
+
+                    jsonResponse.textContent = `${result.json_response}`
                 } else {
                     alert(`Error: ${result.error}`);
                 }

@@ -9,6 +9,7 @@ services:
       - "8000:8000"
     volumes:
       - ./app/results:/app/results
+      - ./app/backend.py:/app/backend.py
 
   frontend:
     image: nginx:alpine
