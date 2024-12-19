@@ -9,7 +9,6 @@ from fastapi.responses import JSONResponse, FileResponse
 
 app = FastAPI()
 
-app.mount("/app/results", StaticFiles(directory=os.path.join("app", "results")), name="results")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,6 +19,7 @@ app.add_middleware(
 
 PARENT_DIR = os.path.join("app", "results")
 os.makedirs(PARENT_DIR, exist_ok=True)
+app.mount("/app/results", StaticFiles(directory=os.path.join("app", "results")), name="results")
 
 @app.post("/upload/")
 async def upload_image(file: UploadFile = File(...)):
