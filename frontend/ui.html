@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Display</title>
+</head>
+<body>
+    <h1>Upload and Display Image</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageInput" name="file" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Uploaded Image:</h2>
+    <img id="uploadedImage" src="" alt="Uploaded Image" style="max-width: 300px; display: none;">
+    
+    <h2>Processed Image:</h2>
+    <img id="processedImage" src="" alt="Processed Image" style="max-width: 300px; display: none;">
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const uploadedImage = document.getElementById('uploadedImage');
+        const processedImage = document.getElementById('processedImage');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            try {
+                const response = await fetch("http://127.0.0.1:8000/upload/", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    // Show the uploaded image
+                    uploadedImage.src = `http://127.0.0.1:8000${result.uploaded_image}`;
+                    uploadedImage.style.display = "block";
+
+                    // Show the processed image
+                    processedImage.src = `http://127.0.0.1:8000${result.processed_image}`;
+                    processedImage.style.display = "block";
+                } else {
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        });
+    </script>
+</body>
+</html>
