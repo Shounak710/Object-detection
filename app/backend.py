@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PARENT_DIR = "images"
+PARENT_DIR = "results"
 os.makedirs(PARENT_DIR, exist_ok=True)
 # UPLOAD_DIR = "uploaded_images"
 # PROCESSED_DIR = "processed_images"
