@@ -57,10 +57,8 @@
 
     <script>
         function populateTable(data) {
-            // Create a table element
             const table = document.createElement("table");
 
-            // Create the table header
             table.innerHTML = `
                 <thead>
                     <tr>
@@ -82,7 +80,6 @@
                 </tbody>
             `;
 
-            // Add the table to the container
             const container = document.getElementById("jsonResponse");
             container.innerHTML = "";
             container.appendChild(table);
