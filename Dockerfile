@@ -17,7 +17,7 @@ COPY app/ /app/
 COPY model/ /model/
 COPY frontend/ /frontend/
 
-RUN mkdir /app/results
+RUN mkdir -p /app/results
 RUN chmod -R 777 /app/
 
 ENV PYTHONPATH="/:/model"
