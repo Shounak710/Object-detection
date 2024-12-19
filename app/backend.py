@@ -32,7 +32,6 @@ async def upload_image(file: UploadFile = File(...)):
         os.makedirs(dir_path, exist_ok=False)
 
         upload_path = os.path.join(dir_path, f"upload{ext}")
-        print('upload path:', upload_path)
 
         try:
             with open(upload_path, "wb") as buffer:

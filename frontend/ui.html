@@ -69,7 +69,7 @@
                     processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
                     processedImage.style.display = "inline-block";
 
-                    jsonResponse.textContent = `${JSON.stringify(result.json_response, null, 2)}`
+                    jsonResponse.textContent = `${JSON.stringify(JSON.parse(result.json_response), null, 2)}`
                 } else {
                     alert(`Error: ${result.error}`);
                 }
