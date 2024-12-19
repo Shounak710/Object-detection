@@ -36,11 +36,11 @@
                 const result = await response.json();
                 if (response.ok) {
                     // Show the uploaded image
-                    uploadedImage.src = `http://127.0.0.1:8000${result.uploaded_image}`;
+                    uploadedImage.src = `http://127.0.0.1:8000/${result.uploaded_image}`;
                     uploadedImage.style.display = "block";
 
                     // Show the processed image
-                    processedImage.src = `http://127.0.0.1:8000${result.processed_image}`;
+                    processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
                     processedImage.style.display = "block";
                 } else {
                     alert(`Error: ${result.error}`);

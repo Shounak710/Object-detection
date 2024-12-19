@@ -1,4 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image, ImageDraw
@@ -9,6 +10,7 @@ from model.models import predict
 
 app = FastAPI()
 
+app.mount("/app/results", StaticFiles(directory="app/results"), name="results")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -17,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-PARENT_DIR = "results"
+PARENT_DIR = os.path.join("app", "results")
 os.makedirs(PARENT_DIR, exist_ok=True)
 # UPLOAD_DIR = "uploaded_images"
 # PROCESSED_DIR = "processed_images"
@@ -48,8 +50,8 @@ async def upload_image(file: UploadFile = File(...)):
         return JSONResponse(content={
             "dir_name": f"{dir_name}",
             "message": f"File '{file.filename}' processed successfully.",
-            "uploaded_image": f"/{PARENT_DIR}/{dir_name}/upload{ext}",
-            "processed_image": f"/{PARENT_DIR}/{dir_name}/processed{ext}",
+            "uploaded_image": f"{upload_path}",
+            "processed_image": f"{processed_path}",
             "json_response": f"{model_response}"
         })
     except Exception as e:

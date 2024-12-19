@@ -12,7 +12,6 @@ def predict(image_path, save_path=None):
   results = model(image_path)
 
   for result in results:
-    print('Getting here !@')
     result.save(save_path)
     responses.append(result.to_json())
 
