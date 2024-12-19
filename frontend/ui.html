@@ -17,6 +17,18 @@
             border: 1px solid #ccc;
             padding: 5px;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +56,40 @@
     </div>
 
     <script>
+        function populateTable(data) {
+            // Create a table element
+            const table = document.createElement("table");
+
+            // Create the table header
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Confidence</th>
+                        <th>Box (x1, y1, x2, y2)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.class}</td>
+                            <td>${item.confidence.toFixed(2)}</td>
+                            <td>${item.box.x1.toFixed(2)}, ${item.box.y1.toFixed(2)}, ${item.box.x2.toFixed(2)}, ${item.box.y2.toFixed(2)}</td>
+                        </tr>
+                    `).join("")}
+                </tbody>
+            `;
+
+            // Add the table to the container
+            const container = document.getElementById("jsonResponse");
+            container.innerHTML = "";
+            container.appendChild(table);
+        }
+    </script>
+
+    <script>
         const form = document.getElementById('uploadForm');
         const uploadedImage = document.getElementById('uploadedImage');
         const processedImage = document.getElementById('processedImage');
@@ -64,18 +110,16 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    // Show the uploaded image
                     uploadedImageText.textContent = "Uploaded image";
                     uploadedImage.src = `http://127.0.0.1:8000/${result.uploaded_image}`;
                     uploadedImage.style.display = "inline-block";
 
-                    // Show the processed image
                     processedImageText.textContent = "Processed image";
                     processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
                     processedImage.style.display = "inline-block";
 
                     jsonResponseText.textContent = "JSON Response";
-                    jsonResponse.textContent = `${JSON.stringify(JSON.parse(result.json_response), null, 2)}`
+                    populateTable(JSON.parse(result.json_response))
                 } else {
                     alert(`Error: ${result.error}`);
                 }
