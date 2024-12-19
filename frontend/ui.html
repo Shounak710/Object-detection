@@ -115,7 +115,7 @@
                     processedImage.src = `http://127.0.0.1:8000/${result.processed_image}`;
                     processedImage.style.display = "inline-block";
 
-                    jsonResponseText.textContent = "JSON Response";
+                    jsonResponseText.textContent = "Detection data";
                     populateTable(JSON.parse(result.json_response))
                 } else {
                     alert(`Error: ${result.error}`);
