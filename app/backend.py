@@ -42,7 +42,11 @@ async def upload_image(file: UploadFile = File(...)):
 
         processed_path = os.path.join(dir_path, f"processed{ext}")
         json_response_path = os.path.join(dir_path, "response.json")
-        model_response = predict(upload_image_path=upload_path, processed_image_path=processed_path, json_response_path=json_response_path)        
+        model_response = predict(
+            upload_image_path=upload_path,
+            processed_image_path=processed_path,
+            json_response_path=json_response_path
+        )
 
         return JSONResponse(content={
             "dir_name": f"{dir_name}",
